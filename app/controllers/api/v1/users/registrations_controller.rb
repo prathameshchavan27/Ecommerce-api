@@ -5,8 +5,9 @@ module Api
         respond_to :json
 
         def create
-          user = User.new(sign_up_params)
+            Rails.logger.debug "⚠️ Incoming sign_up_params: #{sign_up_params.inspect}"
 
+          user = User.new(sign_up_params)
           if user.save
             token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
 
@@ -25,17 +26,25 @@ module Api
         end
 
         private
-        
+
+        # def sign_up_params
+        # #   allowed_roles = ['customer', 'seller']
+        #   user_params = params.require(:user).permit(:email, :password, :password_confirmation, :role)
+
+        # #   user_params[:role] = allowed_roles.include?(user_params[:role]) ? user_params[:role] : 'customer'
+        #   user_params
+        # end
         def sign_up_params
             allowed_roles = ['customer', 'seller']
-            role = params.dig(:user, :role)
+            user_params = params.require(:user).permit(:email, :password, :password_confirmation, :role).to_h
 
-            role = allowed_roles.include?(role) ? role : 'customer'
+            # Force-safe: remove unexpected keys
+            user_params = user_params.slice('email', 'password', 'password_confirmation', 'role')
 
-            params[:user][:role] = role
+            user_params['role'] = allowed_roles.include?(user_params['role']) ? user_params['role'] : 'customer'
+            user_params
+        end
 
-            params.require(:user).permit(:email, :password, :password_confirmation, :role)
-        end       
       end
     end
   end

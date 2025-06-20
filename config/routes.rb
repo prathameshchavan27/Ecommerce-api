@@ -12,6 +12,9 @@ Rails.application.routes.draw do
           sessions: 'api/v1/users/sessions',
           registrations: 'api/v1/users/registrations'
         }
+        namespace :admin do
+          resources :categories
+        end
     end
   end
 end
