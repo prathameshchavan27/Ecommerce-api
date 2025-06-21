@@ -46,8 +46,9 @@ module Api
   module V1
     module Admin
       class CategoriesController < Api::V1::BaseController
-        before_action :authorize_admin!
+        before_action :authorize_admin!, except: %i[index]
         before_action :set_category, only: %i[update destroy]
+
         def create
           category = Category.new(category_params)
           if category.save
@@ -71,6 +72,11 @@ module Api
             else
                 render json: { errors: @category.errors.full_messages }, status: :unprocessable_entity
             end
+        end
+
+        def index
+          @categories = Category.all
+          render json: @categories, status: :ok
         end
 
         private
