@@ -1,0 +1,25 @@
+describe 'HTTP_METHOD /api/v1/your_endpoint' do
+  context 'when valid' do
+    it 'does something expected' do
+      request_method "/api/v1/your_endpoint",
+                     params: { your_payload_hash },
+                     headers: your_auth_headers,
+                     as: :json
+      
+      expect(response).to have_http_status(:expected_status)
+      expect(JSON.parse(response.body)['some_key']).to eq('Expected Value')
+    end
+  end
+
+  context 'when invalid' do
+    it 'returns error' do
+      request_method "/api/v1/your_endpoint",
+                     params: { invalid_payload },
+                     headers: your_auth_headers,
+                     as: :json
+      
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(JSON.parse(response.body)['errors']).to be_present
+    end
+  end
+end
