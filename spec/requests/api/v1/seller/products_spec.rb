@@ -72,5 +72,35 @@ RSpec.describe 'Api::V1::Seller::Products', type: :request do
     end
   end
 
+  describe 'DELETE /api/v1/seller/products/:id' do
+    let(:seller) { create(:user, role: 'seller') }
+    let(:headers) { auth_headers(seller) } 
+    it 'delete the product' do
+     expect {
+        delete "/api/v1/seller/products/#{product.id}",
+              headers: headers,
+              as: :json
+      }.to change(Product, :count).by(-1)
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  describe 'DELETE /api/v1/seller/products/:id' do
+    let(:seller) { create(:user, role: 'seller') }
+    let(:another_seller) { create(:user, role: 'seller') }
+    let(:headers) { auth_headers(another_seller) } 
+    let!(:product) { create(:product, user: seller, category: category) }
+    it 'return forbidden when deleting the product not owned by user' do
+     expect {
+        delete "/api/v1/seller/products/#{product.id}",
+              headers: headers,
+              as: :json
+      }.to change(Product, :count).by(0)
+
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
 
 end

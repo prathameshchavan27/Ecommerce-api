@@ -1,7 +1,7 @@
 class Api::V1::Seller::ProductsController < Api::V1::BaseController
     before_action :authorize_seller!
-    before_action :set_product, only: %i[update]
-    before_action :authorize_seller_owns_product!, only: %i[update]
+    before_action :set_product, only: %i[update destroy]
+    before_action :authorize_seller_owns_product!, only: %i[update destroy]
 
     def create
         @product = @current_user.products.new(product_params)
@@ -13,12 +13,16 @@ class Api::V1::Seller::ProductsController < Api::V1::BaseController
     end
 
     def update
-        @product = Product.find(params[:id])
         if @product.update(product_params)
             render json: @product, status: :ok
         else
             render json: { errors: @product.errors.full_messages }, status: :unprocessable_entity
         end
+    end
+
+    def destroy 
+        @product.destroy
+        render json: @product, status: :ok
     end
 
     private
