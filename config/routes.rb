@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
+      
       devise_for :users,
         path: '',
         path_names: {
@@ -18,6 +19,9 @@ Rails.application.routes.draw do
 
         namespace :seller do
           resources :products
+        end
+        namespace :public do
+          resources :products, only: [:index, :show]
         end
     end
   end
