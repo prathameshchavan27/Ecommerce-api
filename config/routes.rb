@@ -20,6 +20,7 @@ Rails.application.routes.draw do
         namespace :seller do
           resources :products
         end
+        
         namespace :public do
           resources :products, only: [:index, :show]
         end
