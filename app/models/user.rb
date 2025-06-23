@@ -8,8 +8,8 @@ class User < ApplicationRecord
 petergate roles: [:admin, :seller, :customer], multiple: false
   ############################################################################################ 
 
+  has_many :products, dependent: :destroy
   after_initialize :set_default_role, if: :new_record?
-
   private
 
   def set_default_role
