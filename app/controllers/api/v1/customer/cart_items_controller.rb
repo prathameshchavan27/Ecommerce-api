@@ -3,13 +3,14 @@ class Api::V1::Customer::CartItemsController <  Api::V1::BaseController
 
     def create
         @cart = @current_user.cart || @current_user.create_cart
-        @cart_item = @cart.cart_items.find_or_initialize_by(product_id: params[:product_id])
-        @cart_item.quantity = (@cart_item.quantity || 0) + params[:quantity].to_i
-       
-        if @cart_item.save
-            render json: { message: "Item added to cart", cart_item: CartSerializer.new(@cart.reload).as_json }, status: :created
+
+        service = CartItems::AddItemToCart.new(@cart, params[:product_id], params[:quantity])
+        cart_item = service.call
+
+        if cart_item.persisted?
+            render json: { message: "Item added to cart", cart_item: CartSerializer.new(@cart).as_json }, status: :created
         else
-            render json: { errors: @cart_item.errors.full_messages }, status: :unprocessable_entity
+            render json: { errors: cart_item.errors.full_messages }, status: :unprocessable_entity
         end
     end
 
