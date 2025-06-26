@@ -19,4 +19,5 @@ module CartItems
       cart_item
     end
   end
+
 end

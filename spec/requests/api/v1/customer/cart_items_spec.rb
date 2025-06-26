@@ -5,6 +5,7 @@ RSpec.describe "Api::V1::Customer::CartItems", type: :request do
   let(:seller) { create(:user, role: 'seller') }
   let(:category) { create(:category) }
   let!(:product) { create(:product, user: seller, category: category) }
+
   let(:headers)  { auth_headers(customer) }
 
   describe "POST /api/v1/customer/cart_items" do
@@ -23,6 +24,40 @@ RSpec.describe "Api::V1::Customer::CartItems", type: :request do
       expect(json["cart_item"]["items"].first["product_id"]).to eq(product.id)
       expect(json["cart_item"]["items"].first["quantity"]).to eq(2)
       expect(json["cart_item"]["total_price"].to_f).to eq((product.price * 2).to_f)
+    end
+  end
+
+  
+  describe "PATCH /api/v1/customer/cart_items/:id" do
+    let!(:cart)     { customer.create_cart }
+    let!(:cart_item) { cart.cart_items.create(product: product, quantity: 2) }
+    it "updates the quantity of the cart item" do
+      patch "/api/v1/customer/cart_items/#{cart_item.id}",
+        params: { quantity: 5 },
+        headers: headers,
+        as: :json
+
+      expect(response).to have_http_status(:ok)
+      json = JSON.parse(response.body)
+      puts json["cart_item"]
+      expect(json["cart_item"]["quantity"]).to eq(5)
+    end
+  end
+
+  describe "PATCH /api/v1/customer/cart_items/:id" do
+    let!(:cart)     { customer.create_cart }
+    let!(:cart_item) { cart.cart_items.create(product: product, quantity: 2) }
+    let(:headers)  { auth_headers(seller) }
+    it "return forbidden when other user tries to update the cart item" do
+      patch "/api/v1/customer/cart_items/#{cart_item.id}",
+        params: { quantity: 5 },
+        headers: headers,
+        as: :json
+
+      expect(response).to have_http_status(:forbidden)
+      # json = JSON.parse(response.body)
+      # puts json["cart_item"]
+      # expect(json["cart_item"]["quantity"]).to eq(5)
     end
   end
 end

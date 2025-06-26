@@ -14,6 +14,18 @@ class Api::V1::Customer::CartItemsController <  Api::V1::BaseController
         end
     end
 
+    def update
+        @cart = @current_user.cart || @current_user.create_cart
+        service = CartItems::UpdateCartItems.new(@cart, params[:id], params[:quantity])
+        cart_item = service.call
+
+        if cart_item.persisted?
+            render json: { message: "Item Updated in cart", cart_item: cart_item }, status: :ok
+        else
+            render json: { errors: cart_item.errors.full_messages }, status: :unprocessable_entity
+        end
+    end
+
     private
     def authorize_customer!
         Rails.logger.debug "💬 role = #{@current_user&.role.inspect}"
