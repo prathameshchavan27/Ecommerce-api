@@ -20,9 +20,16 @@ Rails.application.routes.draw do
         namespace :seller do
           resources :products
         end
-        
+
         namespace :public do
           resources :products, only: [:index, :show]
+        end
+
+        namespace :customer do
+          resource :cart, only: [:show] do
+            delete :clear, on: :collection
+          end
+          resources :cart_items, only: [:create, :update, :destroy]
         end
     end
   end

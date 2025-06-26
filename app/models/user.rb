@@ -9,6 +9,8 @@ petergate roles: [:admin, :seller, :customer], multiple: false
   ############################################################################################ 
 
   has_many :products, dependent: :destroy
+  has_one :cart, dependent: :destroy
+
   after_initialize :set_default_role, if: :new_record?
   private
 
