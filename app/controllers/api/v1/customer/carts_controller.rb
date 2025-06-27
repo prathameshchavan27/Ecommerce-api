@@ -11,6 +11,12 @@ class Api::V1::Customer::CartsController < Api::V1::BaseController
         end
     end
 
+    def clear
+        cart = @current_user.cart
+        cart.cart_items.destroy_all
+        render json: { message: "Cart has been cleared" }, status: :ok
+    end
+
     private
 
     def authorize_customer!
