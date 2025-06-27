@@ -19,12 +19,25 @@ class Api::V1::Customer::CartItemsController <  Api::V1::BaseController
         service = CartItems::UpdateCartItems.new(@cart, params[:id], params[:quantity])
         cart_item = service.call
 
-        if cart_item.persisted?
+        if cart_item.errors.empty?
             render json: { message: "Item Updated in cart", cart_item: cart_item }, status: :ok
         else
             render json: { errors: cart_item.errors.full_messages }, status: :unprocessable_entity
         end
     end
+
+    def destroy
+        @cart = @current_user.cart || @current_user.create_cart
+        service = CartItems::DeleteCartItems.new(@cart, params[:id])
+        cart_item = service.call
+
+        if cart_item.errors.empty?
+            render json: { message: "Item removed from cart", cart_item: cart_item }, status: :ok
+        else
+            render json: { errors: cart_item.errors.full_messages }, status: :unprocessable_entity
+        end
+    end
+
 
     private
     def authorize_customer!
