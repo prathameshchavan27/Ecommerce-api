@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
+
   namespace :api do
     namespace :v1 do
       
@@ -30,6 +34,8 @@ Rails.application.routes.draw do
             delete :clear, on: :collection
           end
           resources :cart_items, only: [:create, :update, :destroy]
+
+          resources :orders, only: [:create, :index, :show]
         end
     end
   end
