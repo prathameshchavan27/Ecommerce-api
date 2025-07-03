@@ -6,6 +6,41 @@ class Api::V1::Customer::OrdersController < Api::V1::BaseController
         render json: { message: "Order is being processed!" }, status: :accepted
     end
 
+    def direct_checkout
+        requested_quantity = params[:quantity].to_i
+        product = Product.where(id: params[:product_id])
+                        .where("stock >= ?", requested_quantity)
+                        .first
+
+        if product.nil?
+            render json: { error: 'Product out of stock' }, status: :ok
+            return
+        end
+
+        ActiveRecord::Base.transaction do
+            @order = @current_user.orders.create!(
+            total_price: product.price.to_i * requested_quantity,
+            status: :placed
+            )
+
+            @order.order_items.create!(
+            product: product,
+            quantity: requested_quantity,
+            price: product.price
+            )
+
+            product.update!(stock: product.stock - requested_quantity)
+        end
+
+        render json: { message: 'Order placed successfully', order: @order }, status: :created
+    end
+
+
+    private
+    def order_params
+        params.require(:order_item).permit(:product_id,:quantity)
+    end
+
     def authorize_customer!
         Rails.logger.debug "💬 role = #{@current_user&.role.inspect}"
         unless @current_user&.role == :customer
