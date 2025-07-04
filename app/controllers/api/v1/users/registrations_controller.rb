@@ -35,16 +35,15 @@ module Api
         #   user_params
         # end
         def sign_up_params
-            allowed_roles = ['customer', 'seller']
+            allowed_roles = [ "customer", "seller" ]
             user_params = params.require(:user).permit(:email, :password, :password_confirmation, :role).to_h
 
             # Force-safe: remove unexpected keys
-            user_params = user_params.slice('email', 'password', 'password_confirmation', 'role')
+            user_params = user_params.slice("email", "password", "password_confirmation", "role")
 
-            user_params['role'] = allowed_roles.include?(user_params['role']) ? user_params['role'] : 'customer'
+            user_params["role"] = allowed_roles.include?(user_params["role"]) ? user_params["role"] : "customer"
             user_params
         end
-
       end
     end
   end

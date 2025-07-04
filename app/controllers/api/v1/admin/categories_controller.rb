@@ -63,7 +63,7 @@ module Api
                 render json: @category, status: :ok
             else
                 render json: { errors: @category.errors.full_messages }, status: :unprocessable_entity
-          end
+            end
         end
 
         def destroy
@@ -92,7 +92,7 @@ module Api
         def authorize_admin!
           Rails.logger.debug "💬 role = #{@current_user&.role.inspect}"
           unless @current_user&.role == :admin
-            render json: { error: 'Forbidden - Admins only' }, status: :forbidden
+            render json: { error: "Forbidden - Admins only" }, status: :forbidden
           end
         end
 
@@ -104,5 +104,3 @@ module Api
     end
   end
 end
-
-

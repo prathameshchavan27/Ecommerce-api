@@ -6,7 +6,7 @@
 
 #         def create
 #           user = User.find_for_database_authentication(email: sign_in_params[:email])
-#         # sign_in(:user, user) 
+#         # sign_in(:user, user)
 #           if user&.valid_password?(sign_in_params[:password])
 #             # DO NOT call sign_in(user) in API-only mode
 
@@ -31,7 +31,7 @@
 #         def sign_in_params
 #           params.require(:user).permit(:email, :password)
 #         end
-        
+
 #       end
 #     end
 #   end
@@ -48,7 +48,7 @@ module Api
           if user&.valid_password?(sign_in_params[:password])
             token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
             render json: {
-              message: 'Logged in successfully',
+              message: "Logged in successfully",
               user: {
                 id: user.id,
                 email: user.email,
@@ -57,7 +57,7 @@ module Api
               token: token
             }, status: :ok
           else
-            render json: { error: 'Invalid email or password' }, status: :unauthorized
+            render json: { error: "Invalid email or password" }, status: :unauthorized
           end
         end
 
@@ -70,4 +70,3 @@ module Api
     end
   end
 end
-

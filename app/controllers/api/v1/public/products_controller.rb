@@ -14,7 +14,7 @@ class Api::V1::Public::ProductsController < ApplicationController
         }
       }, status: :ok
     else
-      render json: { message: 'No products found' }, status: :not_found
+      render json: { message: "No products found" }, status: :not_found
     end
   end
 
@@ -25,7 +25,7 @@ class Api::V1::Public::ProductsController < ApplicationController
     if @product
       render json: @product, status: :ok
     else
-      render json: { error: 'Product not found' }, status: :not_found
+      render json: { error: "Product not found" }, status: :not_found
     end
   end
 end

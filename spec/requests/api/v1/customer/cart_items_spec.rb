@@ -27,7 +27,7 @@ RSpec.describe "Api::V1::Customer::CartItems", type: :request do
     end
   end
 
-  
+
   describe "PATCH /api/v1/customer/cart_items/:id" do
     let!(:cart)     { customer.create_cart }
     let!(:cart_item) { cart.cart_items.create(product: product, quantity: 2) }
@@ -101,6 +101,5 @@ RSpec.describe "Api::V1::Customer::CartItems", type: :request do
       expect(response).to have_http_status(:unprocessable_entity) # Or :unprocessable_entity depending on your logic
       expect(JSON.parse(response.body)["errors"]).to include("Cart item not found")
     end
-
   end
 end
