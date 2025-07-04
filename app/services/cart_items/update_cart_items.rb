@@ -1,6 +1,6 @@
 module CartItems
     class UpdateCartItems
-        def initialize(cart,cart_item_id, quantity)
+        def initialize(cart, cart_item_id, quantity)
             @cart = cart
             @cart_item_id = cart_item_id
             @quantity = quantity.to_i

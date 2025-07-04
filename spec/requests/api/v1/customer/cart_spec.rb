@@ -4,10 +4,10 @@ RSpec.describe "Api::V1::Customer::Carts", type: :request do
   let(:customer) { create(:user, role: 'customer') }
   let(:seller)   { create(:user, role: 'seller') }
   let(:category) { create(:category) }
-  
+
   let(:headers)  { auth_headers(customer) }
 
-  
+
 
   describe "GET /api/v1/customer/cart" do
     let(:product)  { create(:product, user: seller, category: category) }

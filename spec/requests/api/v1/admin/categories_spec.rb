@@ -7,8 +7,8 @@ RSpec.describe "Api::V1::Admin::Categories", type: :request do
 
   describe 'PUT /api/v1/admin/categories/:id' do
     it 'updates the category name' do
-      put "/api/v1/admin/categories/#{category.id}", 
-          params: { category: { name: 'Updated Name' } }, 
+      put "/api/v1/admin/categories/#{category.id}",
+          params: { category: { name: 'Updated Name' } },
           headers: headers,
           as: :json
       expect(response).to have_http_status(:ok)

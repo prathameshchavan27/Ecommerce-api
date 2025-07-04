@@ -20,7 +20,7 @@ class Api::V1::Seller::ProductsController < Api::V1::BaseController
         end
     end
 
-    def destroy 
+    def destroy
         @product.destroy
         render json: @product, status: :ok
     end
@@ -30,7 +30,7 @@ class Api::V1::Seller::ProductsController < Api::V1::BaseController
     def authorize_seller!
         Rails.logger.debug "💬 role = #{@current_user&.role.inspect}"
         unless @current_user&.role == :seller
-            render json: { error: 'Forbidden - Sellers only' }, status: :forbidden
+            render json: { error: "Forbidden - Sellers only" }, status: :forbidden
         end
     end
 
@@ -40,7 +40,7 @@ class Api::V1::Seller::ProductsController < Api::V1::BaseController
 
     def authorize_seller_owns_product!
         unless @product.user.id == @current_user.id
-            render json: { error: 'Forbidden - Not your product' }, status: :forbidden
+            render json: { error: "Forbidden - Not your product" }, status: :forbidden
         end
     end
 

@@ -7,7 +7,7 @@ class ApplicationController < ActionController::API
 
   private
 def invalid_token
-    render json: { error: 'Invalid token' }, status: :unauthorized
+    render json: { error: "Invalid token" }, status: :unauthorized
   end
 
   # ✅ Override Devise method for API-only

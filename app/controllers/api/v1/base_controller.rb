@@ -1,4 +1,4 @@
-require 'warden/jwt_auth'
+require "warden/jwt_auth"
 
 module Api
   module V1
@@ -10,28 +10,28 @@ module Api
 
       attr_reader :current_user
       rescue_from ActiveRecord::RecordNotFound do |_e|
-        render json: { error: 'Record not found' }, status: :not_found
+        render json: { error: "Record not found" }, status: :not_found
       end
       private
 
       def authenticate_user_from_token!
-        token = request.headers['Authorization']&.split(' ')&.last
+        token = request.headers["Authorization"]&.split(" ")&.last
         if token
           begin
             payload = Warden::JWTAuth::TokenDecoder.new.call(token)
-            @current_user = User.find_by(id: payload['sub'])
+            @current_user = User.find_by(id: payload["sub"])
 
             unless @current_user
-              render json: { error: 'User not found' }, status: :unauthorized
+              render json: { error: "User not found" }, status: :unauthorized
             end
           rescue JWT::ExpiredSignature
-            render json: { error: 'Token has expired' }, status: :unauthorized
+            render json: { error: "Token has expired" }, status: :unauthorized
           rescue => e
             Rails.logger.error "JWT Decode Error: #{e.message}"
-            render json: { error: 'Invalid token' }, status: :unauthorized
+            render json: { error: "Invalid token" }, status: :unauthorized
           end
         else
-          render json: { error: 'Missing token' }, status: :unauthorized
+          render json: { error: "Missing token" }, status: :unauthorized
         end
       end
 
