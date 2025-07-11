@@ -29,7 +29,8 @@ class Order < ApplicationRecord
         product = item.product
 
         # update the product quantity
-        product.update!(stock: product.stock + item.quantity)
+        # product.update!(stock: product.stock + item.quantity)
+        product.increase_stock(item.quantity)
       end
       true
     rescue ActiveRecord::RecordInvalid => e

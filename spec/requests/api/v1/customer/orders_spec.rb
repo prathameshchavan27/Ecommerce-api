@@ -44,6 +44,7 @@ RSpec.describe "Api::V1::Customer::Orders", type: :request do
   #   expect(customer.cart.cart_items).to be_empty
   # end
 
+  #======================================================
   describe "when product is in stock and quantity is valid" do
     let(:product) { create(:product, user: seller, category: category, stock: 10, price: 100) }
     let(:headers)  { auth_headers(customer) }
