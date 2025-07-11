@@ -20,7 +20,11 @@ Rails.application.routes.draw do
         end
 
         namespace :seller do
-          resources :products
+          resources :products, only: [:create, :update, :destroy] do
+            member do
+              patch :adjust_stock
+            end
+          end
         end
 
         namespace :public do

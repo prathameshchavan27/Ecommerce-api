@@ -28,8 +28,7 @@ class Api::V1::Customer::OrdersController < Api::V1::BaseController
             quantity: requested_quantity,
             price: product.price
             )
-
-            product.update!(stock: product.stock - requested_quantity)
+            product.decrease_stock(requested_quantity)
         end
 
         render json: { message: "Order placed successfully", order: @order }, status: :created
