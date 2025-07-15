@@ -19,14 +19,14 @@ class Api::V1::Customer::OrdersController < Api::V1::BaseController
 
         ActiveRecord::Base.transaction do
             @order = @current_user.orders.create!(
-            total_price: product.price.to_i * requested_quantity,
-            status: :placed
+                total_price: product.price.to_i * requested_quantity,
+                status: :placed
             )
 
             @order.order_items.create!(
-            product: product,
-            quantity: requested_quantity,
-            price: product.price
+                product: product,
+                quantity: requested_quantity,
+                price: product.price
             )
             product.decrease_stock(requested_quantity)
         end
