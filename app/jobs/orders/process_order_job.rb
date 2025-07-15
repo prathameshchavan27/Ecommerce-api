@@ -17,8 +17,8 @@ class Orders::ProcessOrderJob < ApplicationJob
         quantity = cart_item.quantity
 
         if product.stock >= quantity
-          product.update!(stock: product.stock - quantity)
-
+          # product.update!(stock: product.stock - quantity)
+          product.decrease_stock(quantity)
           order.order_items.create!(
             product_id: product.id,
             quantity: quantity,
