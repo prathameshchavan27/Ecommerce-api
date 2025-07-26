@@ -1,6 +1,10 @@
 class Product < ApplicationRecord
+  acts_as_paranoid
+
   belongs_to :category
   belongs_to :user
+  has_many :cart_items, dependent: :destroy
+  has_many :order_items
 
   validates :title, :price, :stock, :category_id, :user_id, presence: true
   validates :price, numericality: { greater_than: 0 }

@@ -3,6 +3,24 @@ class Api::V1::Seller::ProductsController < Api::V1::BaseController
     before_action :set_product, only: %i[update destroy]
     before_action :authorize_seller_owns_product!, only: %i[update destroy]
 
+    def index
+        @products = @current_user.products.all
+        if @products.any?
+            # render json: {products: @products}, status: :ok
+            render json: {
+                products: @products.as_json(
+                    include: {
+                        category: { # Include the associated category
+                            only: [:id, :name] # Specify which attributes of category to include
+                        }
+                    }
+                )
+            }, status: :ok
+        else
+            render json: { errors: @products.errors.full_messages }, status: :unprocessable_entity
+        end
+    end
+
     def create
         @product = @current_user.products.new(product_params)
         if @product.save
@@ -56,8 +74,11 @@ class Api::V1::Seller::ProductsController < Api::V1::BaseController
     end
 
     def destroy
-        @product.destroy
-        render json: @product, status: :ok
+        if @product.destroy
+            render json: @product, status: :ok
+        else
+            render json: @product.errors.full_messages, status: :unprocessable_entity
+        end
     end
 
     private

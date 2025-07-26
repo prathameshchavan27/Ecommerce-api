@@ -36,7 +36,7 @@ gem "devise-jwt"
 gem "petergate"
 gem "kaminari"
 gem "sidekiq"
-
+gem 'paranoia'
 # CORS (for frontend/API access)
 gem "rack-cors"
 gem "warden-jwt_auth"
