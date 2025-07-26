@@ -178,6 +178,8 @@ GEM
       racc (~> 1.4)
     orm_adapter (0.5.0)
     parallel (1.27.0)
+    paranoia (3.0.1)
+      activerecord (>= 6, < 8.1)
     parser (3.3.8.0)
       ast (~> 2.4.1)
       racc
@@ -336,6 +338,7 @@ DEPENDENCIES
   factory_bot_rails (~> 6.5)
   faker
   kaminari
+  paranoia
   petergate
   pg (~> 1.1)
   puma (>= 5.0)

@@ -4,7 +4,13 @@ class Api::V1::Public::ProductsController < ApplicationController
 
     if @products.any?
       render json: {
-        products: @products,
+        products: @products.as_json(
+          include: {
+              category: { # Include the associated category
+                  only: [:id, :name] # Specify which attributes of category to include
+              }
+          }
+        ),
         meta: {
           current_page: @products.current_page,
           next_page: @products.next_page,
@@ -23,7 +29,15 @@ class Api::V1::Public::ProductsController < ApplicationController
     @product = Product.find_by(id: params[:id])
 
     if @product
-      render json: @product, status: :ok
+      render json:  {
+          product: @product.as_json(
+            include: {
+                category: { # Include the associated category
+                    only: [:id, :name] # Specify which attributes of category to include
+                }
+            }
+          )
+        }, status: :ok
     else
       render json: { error: "Product not found" }, status: :not_found
     end

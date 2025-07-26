@@ -20,7 +20,7 @@ Rails.application.routes.draw do
         end
 
         namespace :seller do
-          resources :products, only: [:create, :update, :destroy] do
+          resources :products, only: [:create, :update, :destroy, :index] do
             member do
               patch :adjust_stock
             end
@@ -29,6 +29,7 @@ Rails.application.routes.draw do
 
         namespace :public do
           resources :products, only: [ :index, :show ]
+          resources :categories, only: [:index, :show]
         end
 
         namespace :customer do

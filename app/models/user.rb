@@ -12,6 +12,8 @@ petergate roles: [ :admin, :seller, :customer ], multiple: false
   has_one :cart, dependent: :destroy
   has_many :orders, dependent: :destroy
   after_initialize :set_default_role, if: :new_record?
+
+  validates :email, uniqueness: true
   private
 
   def set_default_role
