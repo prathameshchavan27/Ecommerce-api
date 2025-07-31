@@ -24,6 +24,9 @@ Rails.application.routes.draw do
             member do
               patch :adjust_stock
             end
+            collection do # <--- Add this block for actions that don't apply to a single product member
+              post :bulk_stock_upload # NEW: Route for bulk upload
+            end
           end
         end
 

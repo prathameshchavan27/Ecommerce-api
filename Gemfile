@@ -37,6 +37,7 @@ gem "petergate"
 gem "kaminari"
 gem "sidekiq"
 gem 'paranoia'
+gem 'creek'
 # CORS (for frontend/API access)
 gem "rack-cors"
 gem "warden-jwt_auth"
