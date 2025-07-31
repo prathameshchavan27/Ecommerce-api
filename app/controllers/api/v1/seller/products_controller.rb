@@ -81,6 +81,27 @@ class Api::V1::Seller::ProductsController < Api::V1::BaseController
         end
     end
 
+    def bulk_stock_upload
+        if params[:file].nil?
+            render json: { error: "No file uploaded." }, status: :unprocessable_entity
+            return
+        end
+
+        begin
+            # Call the service object. On success, it returns the summary hash directly.
+            # On failure, it will raise an exception.
+            response_data = Product::BulkUpload.call(file: params[:file], current_user: @current_user)
+
+            # If no exception was raised, the operation was successful.
+            render json: response_data, status: :ok
+
+        rescue => e # Catch any exception raised by the service object
+            Rails.logger.error "Bulk stock upload failed: #{e.message}"
+            # Render the error message directly from the caught exception
+            render json: { error: e.message }, status: :unprocessable_entity 
+        end
+    end
+
     private
 
     def authorize_seller!
