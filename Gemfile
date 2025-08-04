@@ -36,13 +36,13 @@ gem "devise-jwt"
 gem "petergate"
 gem "kaminari"
 gem "sidekiq"
-gem 'paranoia'
-gem 'creek'
+gem "paranoia"
+gem "creek"
 # CORS (for frontend/API access)
 gem "rack-cors"
 gem "warden-jwt_auth"
-#payment
-gem 'stripe'
+# payment
+gem "stripe"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

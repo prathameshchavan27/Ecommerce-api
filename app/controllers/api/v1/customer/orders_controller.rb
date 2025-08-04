@@ -1,4 +1,4 @@
-require 'stripe'
+require "stripe"
 class Api::V1::Customer::OrdersController < Api::V1::BaseController
     before_action :authorize_customer!
 
@@ -24,15 +24,15 @@ class Api::V1::Customer::OrdersController < Api::V1::BaseController
             # 3. Make the synchronous Stripe API call
             payment_intent = Stripe::PaymentIntent.create(
                 amount: (@pending_order.total_price * 100).to_i,
-                currency: 'usd',
+                currency: "usd",
                 payment_method: payment_token,
                 confirm: true,
-                return_url: 'http://localhost:3001/',
+                return_url: "http://localhost:3001/",
                 metadata: { order_id: @pending_order.id }
             )
 
             # 4. Check the payment result
-            if payment_intent.status == 'succeeded'
+            if payment_intent.status == "succeeded"
                 # Payment was successful. Queue the job to finalize the order.
                 cart.cart_items.each do |cart_item|
                     product = cart_item.product
@@ -43,6 +43,13 @@ class Api::V1::Customer::OrdersController < Api::V1::BaseController
                         price: product.price
                     )
                 end
+                Payment.create!(
+                    order: @pending_order,
+                    amount: @pending_order.total_price, # Use the amount from Stripe's object (in cents)
+                    currency: payment_intent.currency,
+                    status: payment_intent.status,
+                    stripe_payment_intent_id: payment_intent.id # Store the Stripe ID
+                )
                 Orders::ProcessOrderJob.perform_later(@pending_order.id)
                 render json: { message: "Order is being processed!" }, status: :accepted
             else
@@ -81,13 +88,13 @@ class Api::V1::Customer::OrdersController < Api::V1::BaseController
 
             payment_intent = Stripe::PaymentIntent.create(
                 amount: (@order.total_price * 100).to_i,
-                currency: 'usd',
+                currency: "usd",
                 payment_method: payment_token,
                 confirm: true,
-                return_url: 'http://localhost:3001/',
+                return_url: "http://localhost:3001/",
                 metadata: { order_id: @pending_order.id }
             )
-            if payment_intent.status == 'succeeded'
+            if payment_intent.status == "succeeded"
                 @order.order_items.create!(
                     product: product,
                     quantity: requested_quantity,
