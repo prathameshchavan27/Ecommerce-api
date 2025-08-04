@@ -1,7 +1,7 @@
-require 'csv'   # Ruby's built-in CSV module
-require 'creek' # The 'creek' gem for XLSX processing
+require "csv"   # Ruby's built-in CSV module
+require "creek" # The 'creek' gem for XLSX processing
 
-class Product::BulkUpload 
+class Product::BulkUpload
     def self.call(file:, current_user:)
         new(file: file, current_user: current_user).perform
     end
@@ -24,8 +24,8 @@ class Product::BulkUpload
             # especially for CSVs or if the first row is truly a header in XLSX.
             # `index + 1` gives the original row number from the spreadsheet.
             puts "row - #{row}"
-            next if index == 0 && (row[:product_id].to_s.downcase == 'product_id' || row[:sku].to_s.downcase == 'sku')
-         
+            next if index == 0 && (row[:product_id].to_s.downcase == "product_id" || row[:sku].to_s.downcase == "sku")
+
             process_row(row, index + 1) # <--- THIS IS WHERE process_row IS CALLED!
           end
         end
@@ -40,7 +40,7 @@ class Product::BulkUpload
             errors: @errors
           }
         }
-        # --- END OF MISSING PART ---
+    # --- END OF MISSING PART ---
     rescue RuntimeError => e # Catch custom errors like "Unsupported file type"
         raise e # Re-raise to controller
     rescue => e # Catch any other unexpected errors during the entire process
@@ -52,16 +52,16 @@ class Product::BulkUpload
 
     def validate_file_type!
         file_extension = File.extname(@file.original_filename).downcase
-        unless ['.csv', '.xlsx'].include?(file_extension)
+        unless [ ".csv", ".xlsx" ].include?(file_extension)
             raise "Unsupported file type. Please upload a CSV or Excel (.xlsx) file."
         end
     end
 
     def parse_spreadsheet(file)
         case File.extname(file.original_filename).downcase
-            when '.csv'
+        when ".csv"
                 CSV.read(file.path, headers: true, header_converters: :symbol).map(&:with_indifferent_access)
-            when '.xlsx'
+        when ".xlsx"
                 excel = Creek::Book.new(file.path)
                 sheet = excel.sheets[0] # Assuming the first sheet
                 header_row_data = sheet.rows.first.to_a.map { |cell_array| cell_array[1] }
@@ -74,14 +74,14 @@ class Product::BulkUpload
                     row_hash = {}
                     headers.each_with_index do |header_sym, j|
                         row_hash[header_sym] = row.to_a[j][1]
-                    end 
+                    end
                     data << row_hash.with_indifferent_access
                 end
                 puts data.inspect # Debugging line to see the parsed data
                 data
-            else
+        else
                 raise "Unsupported file type: #{File.extname(file.original_filename)}"
-            end
+        end
     end
 
     def process_row(row, row_number)
@@ -114,10 +114,8 @@ class Product::BulkUpload
         @failed_count += 1
         @errors << {
         row_number: row_number,
-        data: row_data.slice('product_id', 'sku', 'change_quantity'),
+        data: row_data.slice("product_id", "sku", "change_quantity"),
         message: message
         }
     end
 end
-
-

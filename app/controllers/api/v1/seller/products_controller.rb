@@ -11,7 +11,7 @@ class Api::V1::Seller::ProductsController < Api::V1::BaseController
                 products: @products.as_json(
                     include: {
                         category: { # Include the associated category
-                            only: [:id, :name] # Specify which attributes of category to include
+                            only: [ :id, :name ] # Specify which attributes of category to include
                         }
                     }
                 )
@@ -41,8 +41,8 @@ class Api::V1::Seller::ProductsController < Api::V1::BaseController
     def adjust_stock
         @product = @current_user.products.find_by(id: params[:id])
         if @product.nil?
-            render json: {error: "Product not found or you don't have permimssion to adjust stock"}, status: :not_found
-            return 
+            render json: { error: "Product not found or you don't have permimssion to adjust stock" }, status: :not_found
+            return
         end
         change_quantity = params[:change_quantity].to_i
         if change_quantity == 0
@@ -59,7 +59,7 @@ class Api::V1::Seller::ProductsController < Api::V1::BaseController
             end
             render json: {
                 message: "Product stock updated successfully.",
-                product: @product.reload.as_json(only: [:id,:title,:stock])
+                product: @product.reload.as_json(only: [ :id, :title, :stock ])
             }, status: :ok
         rescue Product::InsufficientStockError => e
             render json: { error: e.message }, status: :unprocessable_entity
@@ -98,7 +98,7 @@ class Api::V1::Seller::ProductsController < Api::V1::BaseController
         rescue => e # Catch any exception raised by the service object
             Rails.logger.error "Bulk stock upload failed: #{e.message}"
             # Render the error message directly from the caught exception
-            render json: { error: e.message }, status: :unprocessable_entity 
+            render json: { error: e.message }, status: :unprocessable_entity
         end
     end
 

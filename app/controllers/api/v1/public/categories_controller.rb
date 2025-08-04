@@ -1,6 +1,6 @@
 class Api::V1::Public::CategoriesController < ApplicationController
     def index
-        @categories = Category.all;
+        @categories = Category.all
         if @categories.any?
             render json:  @categories, status: :ok
         else
@@ -8,7 +8,7 @@ class Api::V1::Public::CategoriesController < ApplicationController
         end
     end
 
-    def show 
+    def show
         @category = Category.find(params[:id])
         if @category
             render json: @category, status: :ok

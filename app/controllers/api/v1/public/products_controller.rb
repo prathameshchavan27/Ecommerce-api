@@ -7,7 +7,7 @@ class Api::V1::Public::ProductsController < ApplicationController
         products: @products.as_json(
           include: {
               category: { # Include the associated category
-                  only: [:id, :name] # Specify which attributes of category to include
+                  only: [ :id, :name ] # Specify which attributes of category to include
               }
           }
         ),
@@ -33,7 +33,7 @@ class Api::V1::Public::ProductsController < ApplicationController
           product: @product.as_json(
             include: {
                 category: { # Include the associated category
-                    only: [:id, :name] # Specify which attributes of category to include
+                    only: [ :id, :name ] # Specify which attributes of category to include
                 }
             }
           )
