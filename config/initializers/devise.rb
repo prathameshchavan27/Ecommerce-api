@@ -308,6 +308,9 @@ Devise.setup do |config|
   # ==> Configuration for :registerable
   config.jwt do |jwt|
     jwt.secret = Rails.application.credentials.devise[:jwt_secret_key]
+    if Rails.env.production?
+      jwt.secret = ENV['DEVISE_JWT_SECRET_KEY']
+    end
     jwt.dispatch_requests = [
       [ "POST", %r{^/api/v1/login$} ],
       [ "POST", %r{^/api/v1/register$} ]
