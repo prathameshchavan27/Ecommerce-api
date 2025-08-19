@@ -3,7 +3,7 @@ services:
     name: ecommerce_api
     runtime: ruby
     plan: free
-    buildCommand: 'bundle install && npm install --omit=dev && bundle exec rails assets:precompile && bundle exec rails db:migrate'
+    buildCommand: 'bundle install && bundle exec rails assets:precompile && bundle exec rails db:migrate'
     startCommand: './bin/rails server'
     envVars:
       - key: DATABASE_URL
