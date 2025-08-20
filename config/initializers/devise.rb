@@ -308,7 +308,7 @@ Devise.setup do |config|
   # ==> Configuration for :registerable
   config.jwt do |jwt|
     if Rails.env.production?
-      jwt.secret = ENV['DEVISE_JWT_SECRET_KEY']
+      jwt.secret = ENV["DEVISE_JWT_SECRET_KEY"]
     else
       jwt.secret = Rails.application.credentials.devise[:jwt_secret_key]
     end
