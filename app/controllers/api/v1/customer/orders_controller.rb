@@ -50,7 +50,16 @@ class Api::V1::Customer::OrdersController < Api::V1::BaseController
                     status: payment_intent.status,
                     stripe_payment_intent_id: payment_intent.id # Store the Stripe ID
                 )
-                Orders::ProcessOrderJob.perform_later(@pending_order.id)
+                @pending_order.order_items.includes(:product).each do |order_item|
+                    product = order_item.product
+                    quantity = order_item.quantity
+
+                    # Finalize the stock changes. This assumes reserve_stock has already been called
+                    product.confirm_reservation_and_sell(quantity)
+                end
+
+                @pending_order.update!(status: :placed)
+                @pending_order.user.cart.cart_items.destroy_all
                 render json: { message: "Order is being processed!" }, status: :accepted
             else
                 # Payment failed. The transaction will be rolled back, and reserved stock released.
@@ -91,7 +100,7 @@ class Api::V1::Customer::OrdersController < Api::V1::BaseController
                 currency: "usd",
                 payment_method: payment_token,
                 confirm: true,
-                return_url: "http://localhost:3001/",
+                return_url: "https://ecomm-ui.netlify.app/",
                 metadata: { order_id: @pending_order.id }
             )
             if payment_intent.status == "succeeded"
