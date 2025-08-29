@@ -57,5 +57,7 @@ group :development, :test do
 end
 
 
+gem "dotenv-rails", groups: [ :development, :test ]
+
 
 gem "factory_bot_rails", "~> 6.5", groups: [ :development, :test ]

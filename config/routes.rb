@@ -15,6 +15,7 @@ Rails.application.routes.draw do
           sessions: "api/v1/users/sessions",
           registrations: "api/v1/users/registrations"
         }
+        post "verify_email", to: "users/verifications#verify_email"
         namespace :admin do
           resources :categories
         end
