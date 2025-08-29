@@ -88,6 +88,23 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 
+
+  # email verification mailer setup
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:              "smtp.gmail.com",
+    port:                 587,
+    domain:               "gmail.com",
+    user_name:            ENV["GMAIL_USERNAME"], # your gmail
+    password:             ENV["GMAIL_PASSWORD"], # app password (not normal password)
+    authentication:       "plain",
+    enable_starttls_auto: true
+  }
+
+  config.action_mailer.default_url_options = { host: "https://ecommerce-api-md9b.onrender.com", protocol: "https" }
+  config.action_mailer.default_options = { from: "prathameshcpatu@gmail.com" }
+
+
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com

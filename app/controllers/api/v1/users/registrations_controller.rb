@@ -6,19 +6,14 @@ module Api
 
         def create
             Rails.logger.debug "⚠️ Incoming sign_up_params: #{sign_up_params.inspect}"
-
           user = User.new(sign_up_params)
+          user.email_verified = false # Default to false; implement email verification later
+          user.otp_code = rand(100000..999999).to_s # Generate a 6-character hex code
+          user.otp_sent_at = Time.current
           if user.save
-            token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
-
+            UserMailer.with(user: user).send_verification_otp.deliver_now
             render json: {
-              message: "Signed up successfully",
-              user: {
-                id: user.id,
-                email: user.email,
-                role: user.role
-              },
-              token: token
+              message: "Please verify your email with the OTP sent before logging in."
             }, status: :ok
           else
             render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
