@@ -16,6 +16,11 @@ Rails.application.routes.draw do
           registrations: "api/v1/users/registrations"
         }
         post "verify_email", to: "users/verifications#verify_email"
+
+        namespace :users do
+          resource :profile, only: [ :show, :update ]
+        end
+
         namespace :admin do
           resources :categories
         end

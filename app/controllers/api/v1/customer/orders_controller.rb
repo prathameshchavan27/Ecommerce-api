@@ -75,6 +75,15 @@ class Api::V1::Customer::OrdersController < Api::V1::BaseController
         raise "Payment failed. #{e.message}", :unprocessable_entity
     end
 
+    def show
+        @order = @current_user.orders.find_by(id: params[:id])
+        if @order
+            render json: @order.as_json(include: { order_items: { include: :product } })
+        else
+            render json: { error: "Order not found" }, status: :not_found
+        end
+    end
+
     def direct_checkout
         requested_quantity = params[:quantity].to_i
         payment_token = params[:payment_token]
