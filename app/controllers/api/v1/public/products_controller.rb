@@ -29,15 +29,17 @@ class Api::V1::Public::ProductsController < ApplicationController
     @product = Product.find_by(id: params[:id])
 
     if @product
-      render json:  {
-          product: @product.as_json(
-            include: {
-                category: { # Include the associated category
-                    only: [ :id, :name ] # Specify which attributes of category to include
-                }
+      render json: {
+        product: @product.as_json(
+          only: [ :id, :title, :description, :price, :stock ],
+          methods: [ :image_url ], # 👈 include generated image URL
+          include: {
+            category: {
+              only: [ :id, :name ]
             }
-          )
-        }, status: :ok
+          }
+        )
+      }, status: :ok
     else
       render json: { error: "Product not found" }, status: :not_found
     end

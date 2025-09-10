@@ -24,7 +24,13 @@ class Api::V1::Seller::ProductsController < Api::V1::BaseController
     def create
         @product = @current_user.products.new(product_params)
         if @product.save
-            render json: @product, status: :created
+            render json: @product.as_json(
+                only: [ :id, :title, :description, :price, :stock ],
+                methods: [ :image_url ], # 👈 include the S3 image URL
+                include: {
+                    category: { only: [ :id, :name ] }
+                }
+            ), status: :created
         else
             render json: { errors: @product.errors.full_messages }, status: :unprocessable_entity
         end
@@ -32,11 +38,18 @@ class Api::V1::Seller::ProductsController < Api::V1::BaseController
 
     def update
         if @product.update(product_params)
-            render json: @product, status: :ok
+            render json: @product.as_json(
+                only: [ :id, :title, :description, :price, :stock ],
+                methods: [ :image_url ],
+                include: {
+                    category: { only: [ :id, :name ] }
+                }
+            ), status: :ok
         else
             render json: { errors: @product.errors.full_messages }, status: :unprocessable_entity
         end
     end
+
 
     def adjust_stock
         @product = @current_user.products.find_by(id: params[:id])
@@ -122,6 +135,6 @@ class Api::V1::Seller::ProductsController < Api::V1::BaseController
     end
 
     def product_params
-        params.require(:product).permit(:title, :description, :price, :stock, :category_id)
+        params.require(:product).permit(:title, :description, :price, :stock, :category_id, :image)
     end
 end
