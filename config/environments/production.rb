@@ -30,7 +30,8 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+
+  config.active_storage.service = :amazon
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
@@ -103,6 +104,9 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { host: "https://ecommerce-api-md9b.onrender.com", protocol: "https" }
   config.action_mailer.default_options = { from: "prathameshcpatu@gmail.com" }
+  Rails.application.config.active_storage.default_url_options = {
+    host: "https://ecommerce-api-md9b.onrender.com"
+  }
 
 
   # Enable DNS rebinding protection and other `Host` header attacks.

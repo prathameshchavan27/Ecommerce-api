@@ -5,6 +5,7 @@ class Product < ApplicationRecord
   belongs_to :user
   has_many :cart_items, dependent: :destroy
   has_many :order_items
+  has_one_attached :image
 
   validates :title, :price, :stock, :category_id, :user_id, presence: true
   validates :price, numericality: { greater_than: 0 }
@@ -78,6 +79,18 @@ class Product < ApplicationRecord
 
   def available_for_sale
     stock - reserved_stock
+  end
+
+  def image_url
+    return unless image.attached?
+
+    if Rails.env.development? || Rails.env.production?
+      # Direct S3 URL
+      image.url
+    else
+      # Fallback for local/test
+      Rails.application.routes.url_helpers.url_for(image)
+    end
   end
 
   class InsufficientStockError < StandardError; end
