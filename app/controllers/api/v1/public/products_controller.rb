@@ -1,6 +1,6 @@
 class Api::V1::Public::ProductsController < ApplicationController
   def index
-    @products = Product.page(params[:page]).per(params[:per_page] || 10)
+    @products = Product::Searching.new(params).call
 
     if @products.any?
       render json: {
